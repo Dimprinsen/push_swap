@@ -6,7 +6,7 @@
 /*   By: thtinner <thtinner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/11 02:02:56 by thtinner          #+#    #+#             */
-/*   Updated: 2026/02/23 18:20:10 by thtinner         ###   ########.fr       */
+/*   Updated: 2026/02/23 18:56:20 by thtinner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,12 @@ int	vec_size(const char *s, char c)
 
 	count = 0;
 	idx = 0;
-	while (s[idx] != '\0')
+	while (s[idx])
 	{
 		if (s[idx] != c)
 		{
 			count++;
-			while (s[idx] != c && s[idx + 1] != '\0')
+			while (s[idx] != c && s[idx + 1])
 				idx++;
 		}
 		idx++;

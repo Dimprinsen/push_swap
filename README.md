@@ -42,7 +42,7 @@ The program handles and reports errors for:
 - Non-integer arguments
 - Numbers exceeding INT_MIN to INT_MAX
 - Duplicate numbers
-- Invalid input format
+- Other invalid input format (non-numeric)
 
 Errors display "Error" on stderr and exit gracefully.
 

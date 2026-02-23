@@ -6,7 +6,7 @@
 /*   By: thtinner <thtinner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/11 02:02:56 by thtinner          #+#    #+#             */
-/*   Updated: 2026/02/23 18:20:10 by thtinner         ###   ########.fr       */
+/*   Updated: 2026/02/23 18:45:30 by thtinner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ t_node	*node_find_max(t_node *stk)
 	t_node	*max;
 
 	max = stk;
-	while (stk != NULL)
+	while (stk)
 	{
 		if (stk->value > max->value)
 			max = stk;
@@ -46,7 +46,7 @@ t_node	*node_find_min(t_node *stk)
 	t_node	*min;
 
 	min = stk;
-	while (stk != NULL)
+	while (stk)
 	{
 		if (stk->value < min->value)
 			min = stk;

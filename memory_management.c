@@ -6,7 +6,7 @@
 /*   By: thtinner <thtinner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/11 02:02:56 by thtinner          #+#    #+#             */
-/*   Updated: 2026/02/23 18:20:10 by thtinner         ###   ########.fr       */
+/*   Updated: 2026/02/23 18:56:23 by thtinner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,11 @@ int	check_str(char *str)
 	int	k;
 
 	k = 0;
-	if (str[k] == '\0')
+	if (!str[k])
 		return (0);
-	if (str[k] == '-' && str[k + 1] != '\0')
+	if (str[k] == '-' && str[k + 1])
 		k++;
-	while (str[k] != '\0')
+	while (str[k])
 	{
 		if (str[k] < '0' || str[k] > '9')
 			return (0);
@@ -69,7 +69,7 @@ void	check_numbers(t_node *stk)
 	t_node	*check_node;
 
 	current = stk;
-	while (current != NULL)
+	while (current)
 	{
 		if (current->value < INT_MIN || current->value > INT_MAX)
 		{
@@ -78,7 +78,7 @@ void	check_numbers(t_node *stk)
 			exit(0);
 		}
 		check_node = current->next;
-		while (check_node != NULL)
+		while (check_node)
 		{
 			if (current->value == check_node->value)
 			{
