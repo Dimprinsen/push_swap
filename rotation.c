@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   rotation.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thtinner <thtinner@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: thtinner <thtinner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/11 02:02:56 by thtinner          #+#    #+#             */
-/*   Updated: 2025/10/11 02:03:00 by thtinner         ###   ########.fr       */
+/*   Updated: 2026/02/23 18:20:10 by thtinner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-void	write_n_rotate(t_stk **stk, t_stk *node, int toggle)
+void	write_n_rotate(t_node **stk, t_node *node, int toggle)
 {
 	while (*stk != node)
 	{
@@ -24,7 +24,7 @@ void	write_n_rotate(t_stk **stk, t_stk *node, int toggle)
 	}
 }
 
-void	write_n_rev_rotate(t_stk **stk, t_stk *node, int toggle)
+void	write_n_rev_rotate(t_node **stk, t_node *node, int toggle)
 {
 	while (*stk != node)
 	{
@@ -36,7 +36,7 @@ void	write_n_rev_rotate(t_stk **stk, t_stk *node, int toggle)
 	}
 }
 
-int	sync_rev_rotate(t_stk **stk_a, t_stk **stk_b)
+int	sync_rev_rotate(t_node **stk_a, t_node **stk_b)
 {
 	if (!stk_a || !stk_b)
 		return (0);

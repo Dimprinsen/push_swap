@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   push_swap.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thtinner <thtinner@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: thtinner <thtinner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/11 02:02:56 by thtinner          #+#    #+#             */
-/*   Updated: 2025/10/11 02:03:00 by thtinner         ###   ########.fr       */
+/*   Updated: 2026/02/23 18:22:23 by thtinner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,65 +22,95 @@
 
 typedef struct s_stack
 {
-	long			nbr;
+	long			value;
 	struct s_stack	*next;
-}	t_stk;
+}	t_node;
 
-// stack_manipulation.c
-void	stack_push(t_stk **src, t_stk **dest);
-void	stack_swap(t_stk **stk);
-int		stack_rotate(t_stk **stk);
-int		stack_rev_rotate(t_stk **stk);
-int		stack_sync_rotate(t_stk **stk_a, t_stk **stk_b);
+/* ************************************************************************** */
+/*                            STACK MANAGEMENT                                */
+/* ************************************************************************** */
 
-// rotation_cost.c
-int		get_unsync_cost(t_stk *stk_a, t_stk *stk_b, t_stk *node, t_stk *prev);
-int		get_sync_cost(t_stk *stk_a, t_stk *stk_b, t_stk *node, t_stk *prev);
-int		get_rev_rotation_cost(t_stk *stk, t_stk *node);
-int		get_rotation_cost(t_stk *stk, t_stk *node);
-t_stk	*get_previous_node(t_stk *stk, t_stk *node);
+int		node_append(t_node **stk, t_node *new_node);
+t_node	*node_last(t_node *stk);
+t_node	*node_find_min(t_node *stk);
+t_node	*node_find_max(t_node *stk);
+int		node_count(t_node *stk);
 
-// memory management.c
-int		free_stk(t_stk *stk);
+/* ************************************************************************** */
+/*                          BASIC STACK OPERATIONS                            */
+/* ************************************************************************** */
+
+void	stack_push(t_node **src, t_node **dest);
+void	stack_swap(t_node **stk);
+int		stack_rotate(t_node **stk);
+int		stack_rev_rotate(t_node **stk);
+int		stack_sync_rotate(t_node **stk_a, t_node **stk_b);
+int		sync_rev_rotate(t_node **stk_a, t_node **stk_b);
+
+/* ************************************************************************** */
+/*                          ROTATION & MOVEMENT                               */
+/* ************************************************************************** */
+
+void	write_n_rotate(t_node **stk, t_node *node, int toggle);
+void	write_n_rev_rotate(t_node **stk, t_node *node, int toggle);
+void	do_sync_rotate(t_node **stk_a, t_node **stk_b, t_node *node_a,
+			t_node *node_b);
+void	do_sync_r_rot(t_node **stk_a, t_node **stk_b, t_node *node_a,
+			t_node *node_b);
+void	sync_to_top(t_node **stk_a, t_node **stk_b, t_node *node_a,
+			t_node *node_b);
+void	unsync_to_top(t_node **stk_a, t_node **stk_b, t_node *node_a,
+			t_node *node_b);
+
+/* ************************************************************************** */
+/*                          COST CALCULATION                                  */
+/* ************************************************************************** */
+
+int		get_rotation_cost(t_node *stk, t_node *node);
+int		get_rev_rotation_cost(t_node *stk, t_node *node);
+int		get_sync_cost(t_node *stk_a, t_node *stk_b, t_node *node,
+			t_node *target);
+int		get_unsync_cost(t_node *stk_a, t_node *stk_b, t_node *node,
+			t_node *target);
+int		sync_r_or_rr(t_node *stk_a, t_node *stk_b, t_node *node_a,
+			t_node *node_b);
+
+/* ************************************************************************** */
+/*                          ALGORITHM HELPERS                                 */
+/* ************************************************************************** */
+
+t_node	*get_previous_node(t_node *stk, t_node *node);
+t_node	*get_previous_in_a(t_node *stk, t_node *node);
+t_node	*find_cheapest(t_node *stk_a, t_node *stk_b);
+
+/* ************************************************************************** */
+/*                          SORTING ALGORITHM                                 */
+/* ************************************************************************** */
+
+void	solve_three_elements(t_node **stk);
+t_node	*push_two_elements(t_node **stk_a);
+void	push_to_stack_b(t_node **stk_a, t_node **stk_b);
+void	push_to_stack_a(t_node **stk_a, t_node **stk_b);
+void	order_stack_a(t_node **stk_a, t_node *min);
+
+/* ************************************************************************** */
+/*                          MEMORY & VALIDATION                               */
+/* ************************************************************************** */
+
+int		free_stk(t_node *stk);
 void	free_vector(int argc, char *argv[]);
 int		check_str(char *str);
-void	check_args(int argc, char *argv[]);
-void	check_numbers(t_stk *stk);
+void	check_args(int argc, char *argv[], int should_free);
+void	check_numbers(t_node *stk);
 
-// stack_management.c
-int		stk_add_end(t_stk **stk, t_stk *new_node);
-t_stk	*stk_get_last(t_stk *stk);
-t_stk	*stk_get_min(t_stk *stk);
-t_stk	*stk_get_max(t_stk *stk);
-int		stk_cnt_nds(t_stk *stk);
+/* ************************************************************************** */
+/*                          INITIALIZATION & MAIN                             */
+/* ************************************************************************** */
 
-// synchronization.c
-void	do_sync_rotate(t_stk **stk_a, t_stk **stk_b, t_stk *nd_a, t_stk *nd_b);
-void	do_sync_r_rot(t_stk **stk_a, t_stk **stk_b, t_stk *nd_a, t_stk *nd_b);
-int		sync_r_or_rr(t_stk *stk_a, t_stk *stk_b, t_stk *nd_a, t_stk *nd_b);
-void	sync_to_top(t_stk **stk_a, t_stk **stk_b, t_stk *nd_a, t_stk *nd_b);
-void	unsync_to_top(t_stk **stk_a, t_stk **stk_b, t_stk *nd_a, t_stk *nd_b);
-
-// rotation.c
-void	write_n_rotate(t_stk **stk, t_stk *node, int toggle);
-void	write_n_rev_rotate(t_stk **stk, t_stk *node, int toggle);
-int		sync_rev_rotate(t_stk **stk_a, t_stk **stk_b);
-
-// sorting.c
-void	solve_three_elements(t_stk **stk);
-void	push_to_stack_a(t_stk **stk_a, t_stk **stk_b);
-void	push_to_stack_b(t_stk **stk_a, t_stk **stk_b);
-void	order_stack_a(t_stk **stk_a, t_stk *min);
-t_stk	*push_two_elements(t_stk **stk_a);
-
-// main.c
-t_stk	*initialize_stack(int argc, char **vec);
-void	check_if_stack_ordered(t_stk *stk);
-int		exec_push_swap(t_stk **stk_a);
-
-// utility.c
+char	**parse_args(int *argc, char **argv);
+t_node	*initialize_stack(int argc, char **vec);
+void	check_if_stack_ordered(t_node *stk);
+int		exec_push_swap(t_node **stk_a);
 int		vec_size(const char *s, char c);
-t_stk	*get_previous_in_a(t_stk *stk, t_stk *node);
-t_stk	*find_cheapest(t_stk *stk_a, t_stk *stk_b);
 
 #endif

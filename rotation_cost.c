@@ -3,71 +3,93 @@
 /*                                                        :::      ::::::::   */
 /*   rotation_cost.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thtinner <thtinner@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: thtinner <thtinner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/11 02:02:56 by thtinner          #+#    #+#             */
-/*   Updated: 2025/10/11 02:03:00 by thtinner         ###   ########.fr       */
+/*   Updated: 2026/02/23 18:20:10 by thtinner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-int	get_rotation_cost(t_stk *stk, t_stk *node)
+t_node	*get_previous_node(t_node *stk, t_node *node)
 {
-	int	result;
+	t_node	*current;
+	t_node	*target;
 
-	result = 0;
-	if (stk->nbr == node->nbr)
+	if (node->value > (node_find_max(stk))->value)
+		return (node_find_max(stk));
+	if (node->value < (node_find_min(stk))->value)
+		return (node_find_max(stk));
+	target = node_find_min(stk);
+	current = stk;
+	while (current)
 	{
-		return (result);
+		if ((current->value < node->value) && (current->value > target->value))
+			target = current;
+		current = current->next;
 	}
-	while (stk->nbr != node->nbr)
-	{
-		result++;
-		stk = stk->next;
-	}
-	return (result);
+	return (target);
 }
 
-int	get_rev_rotation_cost(t_stk *stk, t_stk *node)
+int	get_rotation_cost(t_node *stk, t_node *node)
 {
-	int	result;
+	int	count;
 
-	result = 0;
-	if (stk->nbr == node->nbr)
+	count = 0;
+	if (stk->value == node->value)
 	{
-		return (result);
+		return (count);
 	}
-	while (stk->nbr != node->nbr)
+	while (stk->value != node->value)
+	{
+		count++;
+		stk = stk->next;
+	}
+	return (count);
+}
+
+int	get_rev_rotation_cost(t_node *stk, t_node *node)
+{
+	int	count;
+
+	count = 0;
+	if (stk->value == node->value)
+	{
+		return (count);
+	}
+	while (stk->value != node->value)
 		stk = stk->next;
 	while (stk)
 	{
-		result++;
+		count++;
 		stk = stk->next;
 	}
-	return (result);
+	return (count);
 }
 
-int	get_sync_cost(t_stk *stk_a, t_stk *stk_b, t_stk *node, t_stk *prev)
+int	get_sync_cost(t_node *stk_a, t_node *stk_b, t_node *node,
+		t_node *target)
 {
 	int		rot_cost;
 	int		rev_rot_cost;
 
-	if (get_rotation_cost(stk_a, node) > get_rotation_cost(stk_b, prev))
+	if (get_rotation_cost(stk_a, node) > get_rotation_cost(stk_b, target))
 	{
 		rot_cost = get_rotation_cost(stk_a, node);
 	}
 	else
 	{
-		rot_cost = get_rotation_cost(stk_b, prev);
+		rot_cost = get_rotation_cost(stk_b, target);
 	}
-	if (get_rev_rotation_cost(stk_a, node) > get_rev_rotation_cost(stk_b, prev))
+	if (get_rev_rotation_cost(stk_a, node) > get_rev_rotation_cost(stk_b,
+			target))
 	{
 		rev_rot_cost = get_rev_rotation_cost(stk_a, node);
 	}
 	else
 	{
-		rev_rot_cost = get_rev_rotation_cost(stk_b, prev);
+		rev_rot_cost = get_rev_rotation_cost(stk_b, target);
 	}
 	if (rot_cost < rev_rot_cost)
 	{
@@ -76,10 +98,11 @@ int	get_sync_cost(t_stk *stk_a, t_stk *stk_b, t_stk *node, t_stk *prev)
 	return (rev_rot_cost);
 }
 
-int	get_unsync_cost(t_stk *stk_a, t_stk *stk_b, t_stk *node, t_stk *prev)
+int	get_unsync_cost(t_node *stk_a, t_node *stk_b, t_node *node,
+		t_node *target)
 {
 	int		node_cost;
-	int		prev_cost;
+	int		target_cost;
 
 	if (get_rotation_cost(stk_a, node) < get_rev_rotation_cost(stk_a, node))
 	{
@@ -89,33 +112,13 @@ int	get_unsync_cost(t_stk *stk_a, t_stk *stk_b, t_stk *node, t_stk *prev)
 	{
 		node_cost = get_rev_rotation_cost(stk_a, node);
 	}
-	if (get_rotation_cost(stk_b, prev) < get_rev_rotation_cost(stk_b, prev))
+	if (get_rotation_cost(stk_b, target) < get_rev_rotation_cost(stk_b, target))
 	{
-		prev_cost = get_rotation_cost(stk_b, prev);
+		target_cost = get_rotation_cost(stk_b, target);
 	}
 	else
 	{
-		prev_cost = get_rev_rotation_cost(stk_b, prev);
+		target_cost = get_rev_rotation_cost(stk_b, target);
 	}
-	return (node_cost + prev_cost);
-}
-
-t_stk	*get_previous_node(t_stk *stk, t_stk *node)
-{
-	t_stk	*curr;
-	t_stk	*previous;
-
-	if (node->nbr > (stk_get_max(stk))->nbr)
-		return (stk_get_max(stk));
-	if (node->nbr < (stk_get_min(stk))->nbr)
-		return (stk_get_max(stk));
-	previous = stk_get_min(stk);
-	curr = stk;
-	while (curr)
-	{
-		if ((curr->nbr < node->nbr) && (curr->nbr > previous->nbr))
-			previous = curr;
-		curr = curr->next;
-	}
-	return (previous);
+	return (node_cost + target_cost);
 }

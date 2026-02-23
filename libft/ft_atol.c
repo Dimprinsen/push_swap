@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atol.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ttinnerh <ttinnerh@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: thtinner <thtinner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 00:00:00 by ttinnerh          #+#    #+#             */
-/*   Updated: 2024/12/20 00:00:00 by ttinnerh         ###   ########.fr       */
+/*   Updated: 2026/02/23 18:10:30 by thtinner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,24 @@
 
 long	ft_atol(const char *str)
 {
-	long	result;
+	long	nbr;
 	int		sign;
-	int		i;
 
-	result = 0;
+	nbr = 0;
 	sign = 1;
-	i = 0;
-	while (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
-		i++;
-	if (str[i] == '-' || str[i] == '+')
+	while (*str == ' ' || (*str >= 9 && *str <= 13))
+		str++;
+	if (*str == '+' || *str == '-')
 	{
-		if (str[i] == '-')
-			sign = -1;
-		i++;
+		if (*str == '-')
+			sign = -sign;
+		str++;
 	}
-	while (str[i] >= '0' && str[i] <= '9')
+	while (*str >= 48 && *str <= 57)
 	{
-		result = result * 10 + (str[i] - '0');
-		i++;
+		nbr = nbr * 10;
+		nbr = nbr + *str - 48;
+		str++;
 	}
-	return (result * sign);
+	return (nbr * sign);
 }

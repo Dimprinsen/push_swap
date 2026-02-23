@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utility.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thtinner <thtinner@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: thtinner <thtinner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/11 02:02:56 by thtinner          #+#    #+#             */
-/*   Updated: 2025/10/11 02:03:00 by thtinner         ###   ########.fr       */
+/*   Updated: 2026/02/23 18:20:10 by thtinner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,73 +14,74 @@
 
 int	vec_size(const char *s, char c)
 {
-	int	result;
-	int	i;
+	int	count;
+	int	idx;
 
-	result = 0;
-	i = 0;
-	while (s[i] != '\0')
+	count = 0;
+	idx = 0;
+	while (s[idx] != '\0')
 	{
-		if (s[i] != c)
+		if (s[idx] != c)
 		{
-			result++;
-			while (s[i] != c && s[i + 1] != '\0')
-				i++;
+			count++;
+			while (s[idx] != c && s[idx + 1] != '\0')
+				idx++;
 		}
-		i++;
+		idx++;
 	}
-	return (result);
+	return (count);
 }
 
-t_stk	*get_previous_in_a(t_stk *stk, t_stk *node)
+t_node	*get_previous_in_a(t_node *stk, t_node *node)
 {
-	t_stk	*curr;
-	t_stk	*previous;
+	t_node	*current;
+	t_node	*target;
 
-	if (node->nbr > (stk_get_max(stk))->nbr)
-		return (stk_get_min(stk));
-	previous = stk_get_max(stk);
-	curr = stk;
-	while (curr)
+	if (node->value > (node_find_max(stk))->value)
+		return (node_find_min(stk));
+	target = node_find_max(stk);
+	current = stk;
+	while (current)
 	{
-		if ((curr->nbr > node->nbr) && (curr->nbr < previous->nbr))
-			previous = curr;
-		curr = curr->next;
+		if ((current->value > node->value) && (current->value < target->value))
+			target = current;
+		current = current->next;
 	}
-	return (previous);
+	return (target);
 }
 
-static int	get_min_cost(t_stk *stk_a, t_stk *stk_b, t_stk *cur, t_stk *prev)
+static int	get_min_cost(t_node *stk_a, t_node *stk_b, t_node *current,
+			t_node *target)
 {
 	int	sync;
 	int	unsync;
 
-	sync = get_sync_cost(stk_a, stk_b, cur, prev);
-	unsync = get_unsync_cost(stk_a, stk_b, cur, prev);
+	sync = get_sync_cost(stk_a, stk_b, current, target);
+	unsync = get_unsync_cost(stk_a, stk_b, current, target);
 	if (sync < unsync)
 		return (sync);
 	return (unsync);
 }
 
-t_stk	*find_cheapest(t_stk *stk_a, t_stk *stk_b)
+t_node	*find_cheapest(t_node *stk_a, t_node *stk_b)
 {
-	t_stk	*cheapest;
-	t_stk	*cur;
+	t_node	*cheapest;
+	t_node	*current;
 	int		cost;
-	int		tmp_cost;
+	int		temp_cost;
 
 	cost = INT_MAX;
-	cur = stk_a;
-	while (cur)
+	current = stk_a;
+	while (current)
 	{
-		tmp_cost = get_min_cost(stk_a, stk_b, cur,
-				get_previous_node(stk_b, cur));
-		if (tmp_cost < cost)
+		temp_cost = get_min_cost(stk_a, stk_b, current,
+				get_previous_node(stk_b, current));
+		if (temp_cost < cost)
 		{
-			cost = tmp_cost;
-			cheapest = cur;
+			cost = temp_cost;
+			cheapest = current;
 		}
-		cur = cur->next;
+		current = current->next;
 	}
 	return (cheapest);
 }
